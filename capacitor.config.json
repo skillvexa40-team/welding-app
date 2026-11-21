@@ -1,0 +1,12 @@
+{
+  "appId": "com.welding.app",
+  "appName": "Welding App",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "allowMixedContent": false
+  }
+}

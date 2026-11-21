@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#0f172a">
+  <title>Welding App</title>
+  <link rel="stylesheet" href="css/tailwind.css">
+  <style>
+    @media print {
+      body * { visibility: hidden; }
+      #print-receipt, #print-receipt * { visibility: visible; }
+      #print-receipt { position: absolute; left: 0; top: 0; width: 100%; padding: 10px; font-family: monospace; }
+      @page { margin: 0; size: 80mm auto; }
+    }
+  </style>
+</head>
+<body class="bg-gray-100 font-urdu">
+
+  <!-- SHOP SETUP SCREEN -->
+  <div id="shop-setup-screen" class="hidden fixed inset-0 bg-white z-50 flex flex-col p-6">
+    <div class="text-center mt-10 mb-8">
+      <div class="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+      </div>
+      <h1 class="text-2xl font-bold text-gray-800" data-lang-ur="اپنی دکان شامل کریں" data-lang-en="Add Your Shop">Apni Dukan Add Karein</h1>
+    </div>
+    <div class="space-y-4">
+      <div><label class="block text-sm font-medium text-gray-700 mb-1" data-lang-ur="دکان کا نام *" data-lang-en="Shop Name *">Dukan ka Naam *</label><input type="text" id="shop-name" class="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-600 outline-none"></div>
+      <div><label class="block text-sm font-medium text-gray-700 mb-1" data-lang-ur="پتہ" data-lang-en="Address">Pata</label><input type="text" id="shop-address" class="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-600 outline-none"></div>
+      <button onclick="app.saveShop()" class="w-full mt-6 bg-blue-600 text-white py-3 rounded-xl font-bold text-lg hover:bg-blue-700 transition-colors" data-lang-ur="دکان محفوظ کریں" data-lang-en="Save Shop">Dukan Save Karein</button>
+    </div>
+  </div>
+
+  <!-- LOGIN SCREEN -->
+  <div id="login-screen" class="hidden fixed inset-0 flex flex-col items-center justify-center bg-white z-50">
+    <div class="mb-10 text-center">
+      <div class="w-20 h-20 bg-gray-900 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+      </div>
+      <h1 id="login-title" class="text-2xl font-bold text-gray-800">Enter PIN</h1>
+      <p id="login-subtitle" class="text-gray-500 mt-2">Enter your 4-digit PIN to unlock</p>
+    </div>
+    <div class="flex space-x-6 space-x-reverse mb-12">
+      <div id="dot-0" class="w-5 h-5 rounded-full bg-gray-300 transition-all duration-200"></div><div id="dot-1" class="w-5 h-5 rounded-full bg-gray-300 transition-all duration-200"></div><div id="dot-2" class="w-5 h-5 rounded-full bg-gray-300 transition-all duration-200"></div><div id="dot-3" class="w-5 h-5 rounded-full bg-gray-300 transition-all duration-200"></div>
+    </div>
+    <div class="grid grid-cols-3 gap-4 w-72">
+      <button onclick="app.pressKey('1')" class="h-16 text-2xl font-bold bg-gray-100 rounded-2xl hover:bg-gray-200">1</button><button onclick="app.pressKey('2')" class="h-16 text-2xl font-bold bg-gray-100 rounded-2xl hover:bg-gray-200">2</button><button onclick="app.pressKey('3')" class="h-16 text-2xl font-bold bg-gray-100 rounded-2xl hover:bg-gray-200">3</button>
+      <button onclick="app.pressKey('4')" class="h-16 text-2xl font-bold bg-gray-100 rounded-2xl hover:bg-gray-200">4</button><button onclick="app.pressKey('5')" class="h-16 text-2xl font-bold bg-gray-100 rounded-2xl hover:bg-gray-200">5</button><button onclick="app.pressKey('6')" class="h-16 text-2xl font-bold bg-gray-100 rounded-2xl hover:bg-gray-200">6</button>
+      <button onclick="app.pressKey('7')" class="h-16 text-2xl font-bold bg-gray-100 rounded-2xl hover:bg-gray-200">7</button><button onclick="app.pressKey('8')" class="h-16 text-2xl font-bold bg-gray-100 rounded-2xl hover:bg-gray-200">8</button><button onclick="app.pressKey('9')" class="h-16 text-2xl font-bold bg-gray-100 rounded-2xl hover:bg-gray-200">9</button>
+      <div></div><button onclick="app.pressKey('0')" class="h-16 text-2xl font-bold bg-gray-100 rounded-2xl hover:bg-gray-200">0</button><button onclick="app.clearKey()" class="h-16 flex items-center justify-center text-red-500 bg-red-50 rounded-2xl hover:bg-red-100">C</button>
+    </div>
+  </div>
+
+  <!-- MAIN SCREEN -->
+  <div id="main-screen" class="hidden h-screen flex flex-col">
+    <header class="bg-gray-900 text-white p-3 shadow-md flex justify-between items-center z-10">
+      <div class="flex items-center space-x-2 space-x-reverse overflow-hidden w-full">
+        <h1 class="text-lg font-bold whitespace-nowrap hidden sm:block">Welding</h1>
+        <div class="bg-gray-800 rounded-lg px-2 py-1 flex items-center border border-gray-600 truncate max-w-[150px]">
+          <span id="header-shop-name" class="text-xs font-bold text-white truncate mr-2 block w-full">Main Shop</span>
+          <select id="shop-switcher" onchange="app.switchShop(this.value)" class="bg-transparent text-[10px] text-gray-300 outline-none cursor-pointer border-l border-gray-600 pl-1 w-8"><option value="">...</option></select>
+          <button onclick="app.addNewShopFromSwitcher()" class="ml-1 text-green-400 font-bold text-sm hover:text-green-300">+</button>
+        </div>
+      </div>
+      
+      <div class="flex items-center space-x-2 space-x-reverse flex-shrink-0">
+        <!-- Language Switcher -->
+        <button onclick="app.toggleLanguage()" class="px-2 py-1 bg-gray-700 text-xs rounded border border-gray-600 font-bold hover:bg-gray-600">
+          <span id="lang-btn-text">EN</span>
+        </button>
+        <button onclick="location.reload()" class="p-2 bg-red-900/50 text-red-200 rounded-full hover:bg-red-800"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg></button>
+      </div>
+    </header>
+
+    <main class="flex-1 overflow-y-auto bg-gray-50 pb-20">
+      
+      <!-- VIEW: MODERN DASHBOARD -->
+      <div id="view-home" class="p-4 hidden">
+        <div class="bg-gradient-to-r from-blue-700 to-blue-900 rounded-2xl p-6 text-white shadow-lg mb-6 relative overflow-hidden">
+          <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-white opacity-10 rounded-full"></div>
+          <h2 class="text-2xl font-bold mb-1" data-lang-ur="السلام علیکم!" data-lang-en="Welcome!">Asalam-o-Alaikum!</h2>
+          <p class="text-blue-200 text-sm" data-lang-ur="آج کا دن کامیابی والا ہو۔ یہاں آپ کے کاروبار کا خلاصہ ہے۔" data-lang-en="Here is your business summary.">Aaj ka din kamyabi wala ho.</p>
+        </div>
+        <div class="grid grid-cols-2 gap-4 mb-6">
+          <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col justify-between"><div class="flex justify-between items-start mb-2"><span class="text-xs font-bold text-gray-500" data-lang-ur="آج کی سیل" data-lang-en="Today Sales">Aaj ki Sales</span><div class="p-1.5 bg-green-100 text-green-600 rounded-lg"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div></div><h3 class="text-xl font-extrabold text-gray-800" id="dash-today-sales">Rs. 0</h3></div>
+          <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col justify-between"><div class="flex justify-between items-start mb-2"><span class="text-xs font-bold text-gray-500" data-lang-ur="کل ادھار" data-lang-en="Total Credit">Total Udhar</span><div class="p-1.5 bg-red-100 text-red-600 rounded-lg"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg></div></div><h3 class="text-xl font-extrabold text-gray-800" id="dash-total-udhar">Rs. 0</h3></div>
+          <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col justify-between"><div class="flex justify-between items-start mb-2"><span class="text-xs font-bold text-gray-500" data-lang-ur="باقی کام" data-lang-en="Pending Jobs">Pending Kaam</span><div class="p-1.5 bg-yellow-100 text-yellow-600 rounded-lg"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div></div><h3 class="text-xl font-extrabold text-gray-800" id="dash-pending-jobs">0</h3></div>
+          <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col justify-between"><div class="flex justify-between items-start mb-2"><span class="text-xs font-bold text-gray-500" data-lang-ur="کم اسٹاک" data-lang-en="Low Stock">Low Stock</span><div class="p-1.5 bg-orange-100 text-orange-600 rounded-lg"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg></div></div><h3 class="text-xl font-extrabold text-gray-800" id="dash-low-stock">0</h3></div>
+        </div>
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+          <h3 class="font-bold text-gray-800 mb-3 border-b pb-2" data-lang-ur="حالیہ کام" data-lang-en="Recent Jobs">Recent Kaam (Jobs)</h3>
+          <div id="dash-recent-activity" class="space-y-2"></div>
+        </div>
+      </div>
+
+      <!-- VIEW: INVENTORY -->
+      <div id="view-inventory" class="p-4 hidden">
+        <div class="bg-white p-4 rounded-xl shadow-sm mb-6 border border-gray-100">
+          <h2 class="font-bold text-gray-800 mb-3" data-lang-ur="نیا مال شامل کریں" data-lang-en="Add New Item">Naya Maal Add Karein</h2>
+          <div class="space-y-3">
+            <input type="text" id="item-name" placeholder="Maal ka naam" data-placeholder-ur="مال کا نام" data-placeholder-en="Item Name" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-600 outline-none">
+            <div class="grid grid-cols-2 gap-3"><input type="text" id="item-category" placeholder="Category" data-placeholder-ur="کیٹیگری" data-placeholder-en="Category" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-600 outline-none"><input type="text" id="item-unit" placeholder="Unit (Kg/Ft)" data-placeholder-ur="یونٹ (کلو/فٹ)" data-placeholder-en="Unit (Kg/Ft)" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-600 outline-none"></div>
+            <div class="grid grid-cols-3 gap-3"><input type="number" id="item-purchase-rate" placeholder="Kharid Rate" data-placeholder-ur="خریداری ریٹ" data-placeholder-en="Purchase Rate" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-600 outline-none"><input type="number" id="item-sale-rate" placeholder="Bikri Rate" data-placeholder-ur="فروخت ریٹ" data-placeholder-en="Sale Rate" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-600 outline-none"><input type="number" id="item-stock" placeholder="Stock" data-placeholder-ur="اسٹاک" data-placeholder-en="Stock" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-600 outline-none"></div>
+            <button onclick="app.saveItem()" class="w-full bg-blue-600 text-white py-2 rounded-lg font-bold text-sm hover:bg-blue-700" data-lang-ur="محفوظ کریں" data-lang-en="Save Item">Save Item</button>
+          </div>
+        </div>
+        <h2 class="font-bold text-gray-800 mb-3 px-1" data-lang-ur="آپ کا مال" data-lang-en="Your Items">Aap ka Maal</h2><div id="items-list"></div>
+      </div>
+
+      <!-- VIEW: CLIENTS (WITH SEARCH & HISTORY) -->
+      <div id="view-clients" class="p-4 hidden">
+        <div id="client-payment-area" class="bg-blue-50 border border-blue-200 p-4 rounded-xl shadow-sm mb-6 hidden">
+          <h2 class="font-bold text-blue-900 mb-1"><span data-lang-ur="کھاتہ:" data-lang-en="Khata:">Khata:</span> <span id="payment-client-name"></span></h2>
+          <p class="text-sm text-gray-600 mb-3"><span data-lang-ur="موجودہ ادھار:" data-lang-en="Current Credit:">Current Udhar:</span> Rs. <span id="payment-client-balance" class="font-bold text-red-500"></span></p>
+          <div class="flex gap-2 mb-4"><input type="number" id="payment-amount" placeholder="Raqam (Rs.)" data-placeholder-ur="رقم (روپے)" data-placeholder-en="Amount (Rs.)" class="flex-1 px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-600 outline-none"><button onclick="app.receivePayment()" class="bg-green-600 text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-green-700" data-lang-ur="وصول کریں" data-lang-en="Receive">Wasool</button></div>
+          <h3 class="font-bold text-gray-700 text-sm mb-2 border-t pt-3" data-lang-ur="کام کی ہسٹری" data-lang-en="Job History">Kaam ki History</h3>
+          <div id="client-history-list"></div>
+        </div>
+
+        <div class="bg-white p-4 rounded-xl shadow-sm mb-6 border border-gray-100">
+          <h2 class="font-bold text-gray-800 mb-3" data-lang-ur="نیا گاہک شامل کریں" data-lang-en="Add New Client">Naya Gaahak Add Karein</h2>
+          <div class="space-y-3">
+            <input type="text" id="client-name" placeholder="Gaahak ka naam" data-placeholder-ur="گاہک کا نام" data-placeholder-en="Client Name" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-600 outline-none">
+            <div class="grid grid-cols-2 gap-3"><input type="text" id="client-phone" placeholder="Phone" data-placeholder-ur="فون نمبر" data-placeholder-en="Phone" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-600 outline-none"><input type="number" id="client-balance" placeholder="Puraana Udhar" data-placeholder-ur="پرانا ادھار" data-placeholder-en="Previous Credit" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-600 outline-none"></div>
+            <input type="text" id="client-address" placeholder="Address" data-placeholder-ur="پتہ" data-placeholder-en="Address" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-600 outline-none">
+            <button onclick="app.saveClient()" class="w-full bg-blue-600 text-white py-2 rounded-lg font-bold text-sm hover:bg-blue-700" data-lang-ur="محفوظ کریں" data-lang-en="Save Client">Save Client</button>
+          </div>
+        </div>
+
+        <div class="flex justify-between items-center mb-3 px-1"><h2 class="font-bold text-gray-800" data-lang-ur="گاہک لسٹ" data-lang-en="Client List">Gaahak List</h2></div>
+        
+        <div class="relative mb-3 flex gap-2">
+          <input type="text" id="search-client" onkeyup="app.filterClients()" placeholder="Gaahak search karein..." data-placeholder-ur="گاہک تلاش کریں..." data-placeholder-en="Search client..." class="w-full pl-10 pr-4 py-2 border rounded-xl text-sm focus:ring-2 focus:ring-blue-600 outline-none">
+          <svg class="w-5 h-5 text-gray-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+          <button onclick="app.startVoiceSearch('search-client', 'filterClients')" class="bg-blue-100 text-blue-600 px-3 rounded-xl hover:bg-blue-200 transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
+          </button>
+        </div>
+
+        <div id="clients-list"></div>
+      </div>
+
+      <!-- VIEW: JOBS -->
+      <div id="view-jobs" class="p-4 hidden">
+        <div class="bg-white p-4 rounded-xl shadow-sm mb-6 border border-gray-100">
+          <h2 class="font-bold text-gray-800 mb-3" data-lang-ur="نیا کام (جاب)" data-lang-en="New Job">Naya Kaam (Job)</h2>
+          <div class="space-y-3">
+            <select id="job-client" class="w-full px-3 py-2 border rounded-lg text-sm bg-white focus:ring-2 focus:ring-blue-600 outline-none"></select>
+            <div class="grid grid-cols-2 gap-3"><input type="text" id="job-vehicle" placeholder="Gaari" data-placeholder-ur="گاڑی" data-placeholder-en="Vehicle" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-600 outline-none"><input type="text" id="job-product" placeholder="Kaam (e.g. Jangla)" data-placeholder-ur="کام (جیسے جنگلہ)" data-placeholder-en="Job (e.g. Jangla)" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-600 outline-none"></div>
+            <div class="border p-3 rounded-lg bg-gray-50 space-y-2 mt-4">
+              <p class="text-xs font-bold text-gray-600 mb-1" data-lang-ur="مال (میٹیریل)" data-lang-en="Materials">Materials</p>
+              <div class="flex gap-2"><select id="job-material-item" class="flex-1 px-3 py-2 border rounded-lg text-sm bg-white focus:ring-2 focus:ring-blue-600 outline-none"></select><input type="number" id="job-material-qty" placeholder="Qty" data-placeholder-ur="مقدار" data-placeholder-en="Qty" class="w-20 px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-600 outline-none"><button onclick="app.addMaterialToJob()" class="bg-gray-900 text-white px-4 rounded-lg font-bold text-sm hover:bg-gray-800">+</button></div>
+              <div id="job-materials-list" class="pt-2"></div>
+            </div>
+            <div class="flex justify-between items-center text-sm pt-2"><span class="text-gray-600" data-lang-ur="کل مال:" data-lang-en="Material Total:">Material Total:</span><span class="font-bold text-gray-800">Rs. <span id="job-total-material">0</span></span></div>
+            <input type="number" id="job-labour" placeholder="Mazdoori (Rs.)" data-placeholder-ur="مزدوری (روپے)" data-placeholder-en="Labour (Rs.)" class="w-full px-3 py-2 border rounded-lg text-sm mt-2 focus:ring-2 focus:ring-blue-600 outline-none">
+            <button onclick="app.saveJob()" class="w-full bg-blue-600 text-white py-2 rounded-lg font-bold text-sm mt-2 hover:bg-blue-700" data-lang-ur="محفوظ کریں" data-lang-en="Save Job">Save Job</button>
+          </div>
+        </div>
+        
+        <div class="flex justify-between items-center mb-3 px-1"><h2 class="font-bold text-gray-800" data-lang-ur="کام کی لسٹ" data-lang-en="Job List">Kaam List</h2></div>
+        
+        <div class="relative mb-3 flex gap-2">
+          <input type="text" id="search-job" onkeyup="app.filterJobs()" placeholder="Kaam search karein..." data-placeholder-ur="کام تلاش کریں..." data-placeholder-en="Search job..." class="w-full pl-10 pr-4 py-2 border rounded-xl text-sm focus:ring-2 focus:ring-blue-600 outline-none">
+          <svg class="w-5 h-5 text-gray-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+          <button onclick="app.startVoiceSearch('search-job', 'filterJobs')" class="bg-blue-100 text-blue-600 px-3 rounded-xl hover:bg-blue-200 transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
+          </button>
+        </div>
+        
+        <div id="jobs-list"></div>
+      </div>
+
+      <!-- VIEW: MORE -->
+      <div id="view-more" class="p-4 hidden">
+        
+        <!-- 1. REPORTS SECTION -->
+        <div class="bg-white p-4 rounded-xl shadow-sm mb-6 border border-gray-100">
+          <h2 class="font-bold text-gray-800 mb-3 border-b pb-2" data-lang-ur="ماہانہ رپورٹ (منافع/نقصان)" data-lang-en="Monthly Report">Monthly Report</h2>
+          <div class="grid grid-cols-2 gap-3 mb-3">
+            <select id="report-month" class="px-3 py-2 border rounded-lg text-sm bg-white outline-none">
+              <option value="1">January / جنوری</option><option value="2">February / فروری</option><option value="3">March / مارچ</option>
+              <option value="4">April / اپریل</option><option value="5">May / مئی</option><option value="6">June / جون</option>
+              <option value="7">July / جولائی</option><option value="8">August / اگست</option><option value="9">September / ستمبر</option>
+              <option value="10">October / اکتوبر</option><option value="11">November / نومبر</option><option value="12">December / دسمبر</option>
+            </select>
+            <select id="report-year" class="px-3 py-2 border rounded-lg text-sm bg-white outline-none">
+              <option value="2024">2024</option><option value="2025">2025</option><option value="2026">2026</option>
+            </select>
+          </div>
+          <button onclick="app.generateReport()" class="w-full bg-gray-900 text-white py-2 rounded-lg font-bold text-sm mb-4" data-lang-ur="رپورٹ بنائیں" data-lang-en="Generate Report">Generate Report</button>
+
+          <div id="report-results" class="hidden space-y-2 text-sm bg-gray-50 p-3 rounded-lg border relative">
+            <div class="flex justify-between"><span data-lang-ur="کل سیل:" data-lang-en="Total Sales:">Total Sales:</span><span class="font-bold text-green-600" id="report-total-sales">Rs. 0</span></div>
+            <div class="flex justify-between"><span data-lang-ur="کل اخراجات:" data-lang-en="Total Expenses:">Total Expenses:</span><span class="font-bold text-red-500" id="report-total-expenses">Rs. 0</span></div>
+            <div class="flex justify-between"><span data-lang-ur="تنخواہیں:" data-lang-en="Salaries:">Employee Salaries:</span><span class="font-bold text-red-500" id="report-total-salaries">Rs. 0</span></div>
+            <div class="flex justify-between border-t pt-2 mt-2 text-base">
+              <span class="font-bold" data-lang-ur="خالص منافع:" data-lang-en="Net Profit:">Net Profit:</span>
+              <span class="font-extrabold text-green-600" id="report-net-profit">Rs. 0</span>
+            </div>
+            <button onclick="app.printReport()" class="mt-3 w-full bg-blue-100 text-blue-700 py-2 rounded-lg font-bold text-sm flex justify-center items-center gap-2 hover:bg-blue-200">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+              <span data-lang-ur="رپورٹ پرنٹ کریں" data-lang-en="Print Report">Print Report</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 2. EMPLOYEES SECTION -->
+        <div class="bg-white p-4 rounded-xl shadow-sm mb-6 border border-gray-100">
+          <h2 class="font-bold text-gray-800 mb-3" data-lang-ur="نیا کاریگر شامل کریں" data-lang-en="Add New Employee">Naya Karigar Add Karein</h2>
+          <div class="space-y-3">
+            <input type="text" id="emp-name" placeholder="Karigar ka naam" data-placeholder-ur="کاریگر کا نام" data-placeholder-en="Employee Name" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-600 outline-none">
+            <div class="grid grid-cols-2 gap-3"><input type="text" id="emp-phone" placeholder="Phone" data-placeholder-ur="فون" data-placeholder-en="Phone" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-600 outline-none"><input type="text" id="emp-designation" placeholder="Designation" data-placeholder-ur="عہدہ" data-placeholder-en="Designation" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-600 outline-none"></div>
+            <div class="grid grid-cols-2 gap-3"><input type="number" id="emp-salary" placeholder="Monthly Salary" data-placeholder-ur="ماہانہ تنخواہ" data-placeholder-en="Monthly Salary" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-600 outline-none"><input type="number" id="emp-weekly" placeholder="Weekly Kharcha" data-placeholder-ur="ہفتہ وار خرچہ" data-placeholder-en="Weekly Allowance" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-600 outline-none"></div>
+            <button onclick="app.saveEmployee()" class="w-full bg-blue-600 text-white py-2 rounded-lg font-bold text-sm hover:bg-blue-700" data-lang-ur="محفوظ کریں" data-lang-en="Save Employee">Save Karigar</button>
+          </div>
+        </div>
+        <h2 class="font-bold text-gray-800 mb-3 px-1" data-lang-ur="کاریگر لسٹ" data-lang-en="Employee List">Karigar List</h2><div id="employees-list" class="mb-8"></div>
+
+        <!-- 3. EXPENSES SECTION -->
+        <div class="bg-white p-4 rounded-xl shadow-sm mb-6 border border-gray-100">
+          <h2 class="font-bold text-gray-800 mb-3" data-lang-ur="نیا خرچہ شامل کریں" data-lang-en="Add New Expense">Naya Kharcha Add Karein</h2>
+          <div class="space-y-3">
+            <input type="text" id="exp-title" placeholder="Kharchay ki tafseel" data-placeholder-ur="خرچے کی تفصیل" data-placeholder-en="Expense Details" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-600 outline-none">
+            <input type="number" id="exp-amount" placeholder="Raqam (Rs.)" data-placeholder-ur="رقم (روپے)" data-placeholder-en="Amount (Rs.)" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-600 outline-none">
+            <button onclick="app.saveExpense()" class="w-full bg-red-600 text-white py-2 rounded-lg font-bold text-sm hover:bg-red-700" data-lang-ur="محفوظ کریں" data-lang-en="Save Expense">Save Kharcha</button>
+          </div>
+        </div>
+        <h2 class="font-bold text-gray-800 mb-3 px-1" data-lang-ur="دکان کے اخراجات" data-lang-en="Shop Expenses">Dukan ke Kharchay</h2><div id="expenses-list" class="mb-8"></div>
+
+        <!-- 4. BACKUP SECTION -->
+        <div class="bg-gray-900 p-4 rounded-xl shadow-sm mb-6 text-white">
+          <h2 class="font-bold mb-3" data-lang-ur="ڈیٹا بیک اپ اور ریسٹور" data-lang-en="Data Backup & Restore">Data Backup & Restore</h2>
+          <div class="flex gap-3">
+            <button onclick="app.exportData()" class="flex-1 bg-green-500 text-white py-2 rounded-lg font-bold text-sm hover:bg-green-600" data-lang-ur="بیک اپ" data-lang-en="Backup">Backup</button>
+            <label class="flex-1 bg-blue-500 text-white py-2 rounded-lg font-bold text-sm text-center cursor-pointer hover:bg-blue-600">
+              <span data-lang-ur="ریسٹور" data-lang-en="Restore">Restore</span>
+              <input type="file" accept=".json" onchange="app.importData(event)" class="hidden">
+            </label>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bg-white border-t border-gray-200 flex justify-around p-2 pb-safe fixed bottom-0 w-full z-40">
+      <button id="nav-home" onclick="app.switchTab('home')" class="nav-btn flex flex-col items-center p-2 text-blue-600"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg><span class="text-[10px] font-bold mt-1" data-lang-ur="ہوم" data-lang-en="Home">Home</span></button>
+      <button id="nav-inventory" onclick="app.switchTab('inventory')" class="nav-btn flex flex-col items-center p-2 text-gray-400"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg><span class="text-[10px] mt-1" data-lang-ur="اسٹاک" data-lang-en="Inventory">Inventory</span></button>
+      <button id="nav-jobs" onclick="app.switchTab('jobs')" class="nav-btn flex flex-col items-center p-2 text-gray-400"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg><span class="text-[10px] mt-1" data-lang-ur="کام" data-lang-en="Jobs">Jobs</span></button>
+      <button id="nav-clients" onclick="app.switchTab('clients')" class="nav-btn flex flex-col items-center p-2 text-gray-400"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg><span class="text-[10px] mt-1" data-lang-ur="گاہک" data-lang-en="Clients">Clients</span></button>
+      <button id="nav-more" onclick="app.switchTab('more')" class="nav-btn flex flex-col items-center p-2 text-gray-400"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span class="text-[10px] mt-1" data-lang-ur="مزید" data-lang-en="More">More</span></button>
+    </nav>
+  </div>
+
+  <!-- HIDDEN PRINT RECEIPT AREA -->
+  <div id="print-receipt" class="hidden print:block bg-white text-black font-mono"></div>
+
+  <script type="module">
+    import { app } from './js/app.js';
+    app.init();
+    document.getElementById('lang-btn-text').innerText = app.currentLang === 'ur' ? 'EN' : 'UR';
+  </script>
+</body>
+</html>

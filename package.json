@@ -1,0 +1,24 @@
+{
+  "name": "welding-app",
+  "version": "1.0.0",
+  "description": "Welding Business Management System",
+  "main": "index.js",
+  "scripts": {
+    "build:css": "npx tailwindcss -i ./src/input.css -o ./www/css/tailwind.css --minify",
+    "watch:css": "npx tailwindcss -i ./src/input.css -o ./www/css/tailwind.css --watch",
+    "cap:copy": "npx cap copy",
+    "cap:sync": "npx cap sync",
+    "cap:open": "npx cap open android"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ITSC",
+  "devDependencies": {
+    "@capacitor/cli": "^6.2.3",
+    "tailwindcss": "^3.4.0"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6.0.0",
+    "@capacitor/core": "^6.0.0"
+  }
+}
